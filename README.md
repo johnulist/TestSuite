@@ -2,7 +2,7 @@
 Module de suite de test pour Prestashop
 Basé sur SimpleTest pour php http://www.simpletest.org/
 
-1) Installez le module dans prestashop<br/>
+1) Installez le module dans prestashop, modules/testsuite<br/>
 2) Creez votre classe de test dans le dossier test du module
 
 ```php
