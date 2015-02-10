@@ -46,7 +46,24 @@ function run_local_tests() {
         if (tests_have_run()) {
             return;
         }
+
+        $module_path = dirname(__FILE__).'/../../';
+        $modules = scandir($module_path);
+        //ddd($modules);
+        foreach($modules as $module_name) {
+            $test_path = $module_path.$module_name.'/tests/';
+            if(is_dir($test_path) ){
+                $tests =  scandir($test_path);
+                foreach($tests as $test){
+                    if(preg_match('#.+Test.php#', $test)>0) {
+                        include_once($test_path . $test);
+                    }
+                }
+            }
+        }
+
         $candidates = capture_new_classes();
+
         $loader = new SimpleFileLoader();
         $suite = $loader->createSuiteFromClasses(
                 basename(initial_file()),
@@ -57,6 +74,7 @@ function run_local_tests() {
         return false;
     }
 }
+
 
 /**
  *    Checks the current test context to see if a test has

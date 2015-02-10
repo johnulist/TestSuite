@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="Heidi" default="deploy-heidi-local">
+
+    <property environment="env"/>
+    <target name="deploy-heidi-local">
+        <delete dir="${env.heidi.local}/modules/testsuite"/>
+        <mkdir dir="${env.heidi.local}/modules/testsuite"/>
+        <copy todir="${env.heidi.local}/modules/testsuite" overwrite="true">
+            <fileset dir="${basedir}">
+                <include name="**/*"/>
+                <exclude name="**/.idea" />
+                <exclude name="**/.idea/**" />
+                <exclude name="**/.git" />
+                <exclude name="**/.git/**" />
+                <exclude name="build.xml" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="deploy-heidi-preprod">
+
+        <scp todir="root@192.168.119.40:/var/www/prestashop/modules/testsuite" sftp="true" verbose="true" password="*2tmb2*" trust="true">
+            <fileset dir="${basedir}">
+                <include name="**/*"/>
+                <exclude name="**/.idea" />
+                <exclude name="**/.idea/**" />
+                <exclude name="**/.git" />
+                <exclude name="**/.git/**" />
+                <exclude name="build.xml" />
+            </fileset>
+        </scp>
+
+        <scp todir="root@192.168.119.40:/var/www/prestashop_1.6/modules/testsuite" sftp="true" verbose="true" password="*2tmb2*" trust="true">
+            <fileset dir="${basedir}">
+                <include name="**/*"/>
+                <exclude name="**/.idea" />
+                <exclude name="**/.idea/**" />
+                <exclude name="**/.git" />
+                <exclude name="**/.git/**" />
+                <exclude name="build.xml" />
+            </fileset>
+        </scp>
+
+        <echo>changing permissions...</echo>
+        <sshexec host="192.168.119.40"
+                 username="root"
+                 password="*2tmb2*"
+                 verbose="true"
+                 trust="true"
+                 command="chown -R www-data:www-data  /var/www/prestashop/modules/testsuite/ "/>
+
+        <sshexec host="192.168.119.40"
+                 username="root"
+                 password="*2tmb2*"
+                 verbose="true"
+                 trust="true"
+                 command="chown -R www-data:www-data  /var/www/prestashop_1.6/modules/testsuite/ "/>
+
+    </target>
+
+
+</project>
