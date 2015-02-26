@@ -17,7 +17,7 @@ class TestSuite extends Module
     {
         $this->name = 'testsuite';
         $this->tab = 'front_office_features';
-        $this->version = '0.1.0';
+        $this->version = '0.1.#rev#';
         $this->author = 'Happy Technologies';
 
         parent::__construct();

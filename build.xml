@@ -2,6 +2,11 @@
 <project basedir="." name="Heidi" default="deploy-heidi-local">
 
     <property environment="env"/>
+    <property file="build.properties"/>
+    <path id="jsch.path">
+        <pathelement location="libs/jsch-0.1.51.jar"/>
+    </path>
+
     <target name="deploy-heidi-local">
         <delete dir="${env.heidi.local}/modules/testsuite"/>
         <mkdir dir="${env.heidi.local}/modules/testsuite"/>
@@ -55,6 +60,65 @@
                  verbose="true"
                  trust="true"
                  command="chown -R www-data:www-data  /var/www/prestashop_1.6/modules/testsuite/ "/>
+
+    </target>
+
+    <target name="deploy-happystore-preprod" depends="package">
+        <echo>deploy happystore preprod </echo>
+        <scp file="${packageDir}/testsuite-${rev}.tar.gz"
+             todir="root@192.168.119.40:/var/www/happystore-preprod/modules"
+             password="*2tmb2*"
+             verbose="true"
+             sftp="true"
+             trust="true"/>
+
+        <sshexec host="192.168.119.40"
+                 username="root"
+                 password="*2tmb2*"
+                 verbose="true"
+                 trust="true"
+                 command="chown -R www-data:www-data  /var/www/happystore-preprod "/>
+    </target>
+
+    <target name="package">
+
+
+        <echo>making module...</echo>
+        <delete dir="${buildDir}"/>
+        <mkdir dir="${buildDir}"/>
+        <copy todir="${buildDir}" overwrite="true">
+            <fileset dir="${basedir}">
+                <include name="**/*"/>
+                <exclude name="**/.idea"/>
+                <exclude name="**/.idea/**"/>
+                <exclude name="**/.git"/>
+                <exclude name="**/.git/**"/>
+            </fileset>
+        </copy>
+
+        <exec dir="${basedir}" command="git rev-parse --short HEAD" outputproperty="rev"/>
+        <echo>parsing revision...</echo>
+        <replace file="${buildDir}/config.xml" token="#rev#" value="${rev}"/>
+        <replace file="${buildDir}/testsuite.php" token="#rev#" value="${rev}"/>
+
+        <echo>making package...</echo>
+        <tar destfile="${packageDir}/testsuite-${rev}.tar.gz" compression="gzip">
+            <tarfileset dir="${buildDir}">
+                <include name="**/*"/>
+                <exclude name="**/.idea"/>
+                <exclude name="**/.idea/**"/>
+                <exclude name="**/.git"/>
+                <exclude name="**/.git/**"/>
+                <exclude name="build.xml" />
+                <exclude name="build.properties" />
+                <exclude name="**/build"/>
+                <exclude name="**/build/**"/>
+                <exclude name="**/packages"/>
+                <exclude name="**/packages/**"/>
+                <exclude name="**/libs"/>
+                <exclude name="**/libs/**"/>
+            </tarfileset>
+        </tar>
 
     </target>
 

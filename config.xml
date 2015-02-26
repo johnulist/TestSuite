@@ -2,7 +2,7 @@
         <module>
             <name>testsuite</name>
             <displayName><![CDATA[TestSuite]]></displayName>
-            <version><![CDATA[0.1.0]]></version>
+            <version><![CDATA[0.1.#rev#]]></version>
             <description><![CDATA[Module de suite de test.]]></description>
             <author><![CDATA[Happy Technologies]]></author>
             <tab><![CDATA[front_office_features]]></tab>
